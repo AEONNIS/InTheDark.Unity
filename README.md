@@ -1,2 +1,2 @@
 # InTheDark
-Procedarally generated game.
+Процедурно генерируемая 2D игра для Android, где нужно выбраться из мрачного подземелья.
