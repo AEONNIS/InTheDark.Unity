@@ -1,0 +1,16 @@
+{
+    "name": "InTheDark.UnityIntegration",
+    "rootNamespace": "InTheDark.UnityIntegration",
+    "references": [
+        "GUID:7e5766422be3acc40a1b3a730889a584"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

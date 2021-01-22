@@ -1,0 +1,16 @@
+{
+    "name": "InTheDark",
+    "rootNamespace": "InTheDark",
+    "references": [
+        "GUID:656c2c43d3cfe4855bd40e058874b0be"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}
