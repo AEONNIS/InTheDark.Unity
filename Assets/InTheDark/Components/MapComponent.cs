@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Leopotam.Ecs.Types;
+using System.Collections.Generic;
 
 namespace InTheDark.Components
 {
-    internal struct MapComponent
+    public struct MapComponent
     {
-        public Dictionary<Vector2Int, Tile> Cells;
+        public Dictionary<Int2, Tile> Cells;
     }
 }

@@ -5,9 +5,12 @@ using UnityEngine.Tilemaps;
 namespace InTheDark.UnityIntegration
 {
     [Serializable]
-    internal struct TileView
+    public struct LayerTileView
     {
         [SerializeField] private LayerTileId _id;
-        [SerializeField] private TileBase _tile;
+        [SerializeField] private TileBase _tileView;
+
+        public LayerTileId Id => _id;
+        public TileBase TileView => _tileView;
     }
 }
