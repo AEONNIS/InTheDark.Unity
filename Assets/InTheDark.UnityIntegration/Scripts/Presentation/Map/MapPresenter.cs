@@ -1,19 +1,15 @@
 ﻿using InTheDark.Components;
 using UnityEngine;
 
-namespace InTheDark.UnityIntegration
+namespace InTheDark.UnityIntegration.Presentation
 {
-    public class MapPresenter : MonoBehaviour, IMapChangePresenter
+    public class MapPresenter : MonoBehaviour, IMapPresenter
     {
-        [SerializeField] private MapLayerPresenter _background;
-        [SerializeField] private MapLayerPresenter _foreground;
+        [SerializeField] private MapBgPresenter _bgPresenter;
+        [SerializeField] private MapFgPresenter _fgPresenter;
 
-        public void Present(in MapChangesComponent mapChanges)
-        {
-            Debug.Log($"{nameof(MapPresenter.Present)}: {mapChanges.ChangedCells}");
+        public void Present(in BgTileComponent bgTile) => _bgPresenter.Present(bgTile);
 
-            _background.Present(mapChanges, true);
-            _foreground.Present(mapChanges, false);
-        }
+        public void Present(in FgTileComponent fgTile) => _fgPresenter.Present(fgTile);
     }
 }

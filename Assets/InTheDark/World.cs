@@ -1,8 +1,7 @@
-﻿using InTheDark.Components;
+﻿using InTheDark.Components.Events;
 using InTheDark.Systems;
 using Leopotam.Ecs;
 using Leopotam.Ecs.Types;
-using System.Collections.Generic;
 
 namespace InTheDark
 {
@@ -13,17 +12,17 @@ namespace InTheDark
 
         public World()
         {
-            _systems = new EcsSystems(_ecsWorld);
-            AddSystems();
+            _systems = new EcsSystems(_ecsWorld)
+                .AddSystems()
+                .AddOneFrameComponents();
         }
 
-        public void Inject(IMapChangePresenter mapChangePresenter) => _systems.Inject(mapChangePresenter);
+        public void Inject(object obj) => _systems.Inject(obj);
 
         public void Init()
         {
-            // Важен порядок: сначла инициализация, потом создание карты, иначе генерция карты не работает. Почему?
             _systems.Init();
-            CreateMap();
+            CreateMapPart();
         }
 
         public void Update() => _systems?.Run();
@@ -39,22 +38,22 @@ namespace InTheDark
             }
         }
 
-        private void CreateMap()
+        public void CreateMapPart()
         {
             var entity = _ecsWorld.NewEntity();
-            ref var map = ref entity.Get<MapComponent>();
-            map.Cells = new Dictionary<Int2, Tile>();
-
-            // Testing
-            ref var mapModuleCreation = ref entity.Get<MapModuleCreationComponent>();
-            mapModuleCreation.OffsetOnMap = new Int2(0, 0);
-            mapModuleCreation.ModuleSize = new Int2(16, 16);
+            ref var toCreateMapPart = ref entity.Get<ToCreateMapPartEvent>();
+            toCreateMapPart = new ToCreateMapPartEvent { Size = new Int2(32, 32), OffsetOnMap = new Int2(0, 0) };
         }
+    }
 
-        private void AddSystems()
-        {
-            _systems.Add(new MapModuleGenerationSystem());
-            _systems.Add(new MapChangePresentationSystem());
-        }
+    public static class WorldExtension
+    {
+        public static EcsSystems AddSystems(this EcsSystems systems) => systems
+            .Add(new MapPartGenerationSystem())
+            .Add(new MapPresentationSystem());
+
+        public static EcsSystems AddOneFrameComponents(this EcsSystems systems) => systems
+            .OneFrame<ToCreateMapPartEvent>()
+            .OneFrame<ToPresentEvent>();
     }
 }

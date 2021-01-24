@@ -2,15 +2,15 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace InTheDark.UnityIntegration
+namespace InTheDark.UnityIntegration.Presentation
 {
     [Serializable]
-    public struct LayerTileView
+    public struct FgTileView
     {
-        [SerializeField] private LayerTileId _id;
+        [SerializeField] private FgTileId _id;
         [SerializeField] private TileBase _tileView;
 
-        public LayerTileId Id => _id;
+        public FgTileId Id => _id;
         public TileBase TileView => _tileView;
     }
 }

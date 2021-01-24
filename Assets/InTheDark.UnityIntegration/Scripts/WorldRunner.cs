@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using InTheDark.UnityIntegration.Presentation;
+using UnityEngine;
 
 namespace InTheDark.UnityIntegration
 {
     public class WorldRunner : MonoBehaviour
     {
         [SerializeField] private MapPresenter _mapPresenter;
+
         private World _world = null;
 
         private void Start()

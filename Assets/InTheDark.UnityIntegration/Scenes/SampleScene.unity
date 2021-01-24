@@ -225,8 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9121cfc78e62af145ace569786376a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _background: {fileID: 573533898}
-  _foreground: {fileID: 535851775}
+  _bgPresenter: {fileID: 573533898}
+  _fgPresenter: {fileID: 535851775}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +280,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 14.2
+  orthographic size: 28.4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -304,7 +304,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 14.2, z: -10}
+  m_LocalPosition: {x: 16, y: 28.4, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -438,11 +438,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 535851771}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada74ca4af622904da7deeb95cd87078, type: 3}
+  m_Script: {fileID: 11500000, guid: f4420d32dcb3c69479ccb14f4f816bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _tilemap: {fileID: 535851774}
-  _tilesetViews: {fileID: 11400000, guid: e7dbfb1539dc6e4449b1c7cf0f044d67, type: 2}
+  _fgTilesetView: {fileID: 11400000, guid: cff2e856e5f868e488b997893ab2568d, type: 2}
 --- !u!1 &573533894
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,4 +575,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tilemap: {fileID: 573533897}
-  _tilesetViews: {fileID: 11400000, guid: e7dbfb1539dc6e4449b1c7cf0f044d67, type: 2}
+  _bgTilesetView: {fileID: 11400000, guid: e7dbfb1539dc6e4449b1c7cf0f044d67, type: 2}
