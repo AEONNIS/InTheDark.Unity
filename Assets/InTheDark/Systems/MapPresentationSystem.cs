@@ -12,16 +12,23 @@ namespace InTheDark.Systems
 
         public void Run()
         {
+            PresentBackground();
+            PresentForeground();
+        }
+
+        private void PresentBackground()
+        {
             foreach (var i in _bgTilePresent)
             {
-                ref var entity = ref _bgTilePresent.GetEntity(i);
                 ref var bgTile = ref _bgTilePresent.Get1(i);
                 _mapPresenter.Present(bgTile);
             }
+        }
 
+        private void PresentForeground()
+        {
             foreach (var i in _fgTilePresent)
             {
-                ref var entity = ref _fgTilePresent.GetEntity(i);
                 ref var fgTile = ref _fgTilePresent.Get1(i);
                 _mapPresenter.Present(fgTile);
             }

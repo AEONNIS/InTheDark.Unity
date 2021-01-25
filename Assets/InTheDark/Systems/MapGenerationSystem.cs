@@ -5,10 +5,20 @@ using Leopotam.Ecs.Types;
 
 namespace InTheDark.Systems
 {
-    public class MapPartGenerationSystem : IEcsRunSystem
+    public class MapGenerationSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly EcsWorld _world = null;
         private readonly EcsFilter<ToCreateMapPartEvent> _filter = null;
+
+        // Вынести в конфиг, когда разберусь, как его правильно реализовать.
+        private readonly Int2 _mapPartSize = new Int2(32, 32);
+        private readonly Int2 _initOffsetOnMap = new Int2(0, 0);
+
+        public void Init()
+        {
+            var toCreateInitMapPart = new ToCreateMapPartEvent { Size = _mapPartSize, OffsetOnMap = _initOffsetOnMap };
+            CreateInitMapPart(toCreateInitMapPart);
+        }
 
         public void Run()
         {
@@ -19,6 +29,13 @@ namespace InTheDark.Systems
                 CreateFloor(toCreateMapPart);
                 CreateExternalWalls(toCreateMapPart);
             }
+        }
+
+        public void CreateInitMapPart(in ToCreateMapPartEvent toCreateInitMapPart)
+        {
+            var entity = _world.NewEntity();
+            ref var toCreateMapPart = ref entity.Get<ToCreateMapPartEvent>();
+            toCreateMapPart = toCreateInitMapPart;
         }
 
         private void CreateFloor(in ToCreateMapPartEvent toCreateMapPart)
