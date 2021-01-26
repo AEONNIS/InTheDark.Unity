@@ -2,6 +2,7 @@
     "name": "InTheDark.UnityIntegration",
     "rootNamespace": "InTheDark.UnityIntegration",
     "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
         "GUID:7e5766422be3acc40a1b3a730889a584",
         "GUID:656c2c43d3cfe4855bd40e058874b0be",
         "GUID:f9657f10179e94af08566a62f2c6a13f"
