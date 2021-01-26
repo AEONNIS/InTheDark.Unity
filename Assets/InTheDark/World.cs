@@ -16,7 +16,14 @@ namespace InTheDark
                 .AddOneFrameComponents();
         }
 
-        public void Inject(object obj) => _systems.Inject(obj);
+        public void Send<T>(in T eventComponent) where T : struct
+        {
+            var entity = _ecsWorld.NewEntity();
+            ref var newEventComponent = ref entity.Get<T>();
+            newEventComponent = eventComponent;
+        }
+
+        public void Inject<T>(T instance) => _systems.Inject(instance);
 
         public void Init() => _systems?.Init();
 
@@ -34,6 +41,7 @@ namespace InTheDark
         }
     }
 
+    // Частный случай расширения, никакой универсальности. Надо переделать или убрать.
     public static class WorldExtension
     {
         public static EcsSystems AddSystems(this EcsSystems systems) => systems

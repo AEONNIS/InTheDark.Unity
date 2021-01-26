@@ -7,16 +7,16 @@ namespace InTheDark.Systems
 {
     public class PlayerMovementSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<PlayerComponent, ToMoveEvent> _playerMove = null;
-        private readonly EcsFilter<FgTileComponent> _fgTile = null;
+        private readonly EcsFilter<PlayerComponent, ToMoveEvent> _playerToMoveFilter = null;
+        private readonly EcsFilter<FgTileComponent> _fgTileFilter = null;
 
         public void Run()
         {
-            foreach (var i in _playerMove)
+            foreach (var i in _playerToMoveFilter)
             {
-                ref var entity = ref _playerMove.GetEntity(i);
-                ref var player = ref _playerMove.Get1(i);
-                ref var toMove = ref _playerMove.Get2(i);
+                ref var entity = ref _playerToMoveFilter.GetEntity(i);
+                ref var player = ref _playerToMoveFilter.Get1(i);
+                ref var toMove = ref _playerToMoveFilter.Get2(i);
                 var endPosition = player.Position + toMove.Movement;
 
                 if (MovementPossibility(endPosition))
@@ -32,9 +32,9 @@ namespace InTheDark.Systems
 
         private bool MovementPossibility(in Int2 endPosition)
         {
-            foreach (var i in _fgTile)
+            foreach (var i in _fgTileFilter)
             {
-                ref var tile = ref _fgTile.Get1(i);
+                ref var tile = ref _fgTileFilter.Get1(i);
 
                 if (tile.Position == endPosition && TileIsNotPassable(tile))
                     return false;
