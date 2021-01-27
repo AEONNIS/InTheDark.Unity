@@ -1,6 +1,5 @@
 ﻿using InTheDark.Model.Components;
-using InTheDark.Model.Components.Events;
-using InTheDark.Model.Maps.Tiles;
+using InTheDark.Model.Map;
 using Leopotam.Ecs;
 using Leopotam.Ecs.Types;
 
@@ -8,42 +7,41 @@ namespace InTheDark.Model.Systems
 {
     public class PlayerMovementSystem : IEcsRunSystem
     {
-        private readonly EcsFilter<PlayerComponent, ToMoveEvent> _playerToMoveFilter = null;
-        private readonly EcsFilter<FgTileComponent> _fgTileFilter = null;
+        private readonly EcsFilter<PlayerComponent, MovementEvent> _playerMovementFilter = null;
+        private readonly EcsFilter<ForegroundTileComponent> _foregroundTileFilter = null;
 
         public void Run()
         {
-            foreach (var i in _playerToMoveFilter)
+            foreach (var i in _playerMovementFilter)
             {
-                ref var entity = ref _playerToMoveFilter.GetEntity(i);
-                ref var player = ref _playerToMoveFilter.Get1(i);
-                ref var toMove = ref _playerToMoveFilter.Get2(i);
-                var endPosition = player.Position + toMove.Movement;
+                ref var entity = ref _playerMovementFilter.GetEntity(i);
+                ref var player = ref _playerMovementFilter.Get1(i);
+                ref var movement = ref _playerMovementFilter.Get2(i);
+                var endPosition = player.Position + movement.Value;
 
-                if (MovementPossibility(endPosition))
+                if (IsMovementPossibleTo(endPosition))
                 {
-                    ref var toPresentMovement = ref entity.Get<ToPresentMovementEvent>();
-                    toPresentMovement = new ToPresentMovementEvent { StartPosition = player.Position, EndPosition = endPosition };
+                    ref var movementPresentation = ref entity.Get<MovementPresentationEvent>();
+                    movementPresentation = new MovementPresentationEvent { Movement = movement.Value };
                     player.Position = endPosition;
                 }
-
-                entity.Del<ToMoveEvent>();
             }
         }
 
-        private bool MovementPossibility(in Int2 endPosition)
+        private bool IsMovementPossibleTo(in Int2 endPosition)
         {
-            foreach (var i in _fgTileFilter)
+            foreach (var i in _foregroundTileFilter)
             {
-                ref var tile = ref _fgTileFilter.Get1(i);
+                ref var foregroundTile = ref _foregroundTileFilter.Get1(i);
 
-                if (tile.Position == endPosition && TileIsNotPassable(tile))
+                if (foregroundTile.Position == endPosition && TileIsNotPassable(foregroundTile))
                     return false;
             }
 
             return true;
         }
 
-        private bool TileIsNotPassable(in FgTileComponent tile) => tile.TileId == FgTileId.Wall || tile.TileId == FgTileId.Door;
+        private bool TileIsNotPassable(in ForegroundTileComponent foregroundTile)
+            => foregroundTile.Id == ForegroundTileId.Wall || foregroundTile.Id == ForegroundTileId.Door;
     }
 }

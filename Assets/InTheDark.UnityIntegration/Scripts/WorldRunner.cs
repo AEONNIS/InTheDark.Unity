@@ -15,9 +15,9 @@ namespace InTheDark.UnityIntegration
         #region Unity
         private void Awake()
         {
-            _inputController = new InputController(_world);
             _world.Inject(_mapPresenter);
             _world.Init();
+            _inputController = new InputController(_world);
         }
 
         private void OnEnable() => _inputController.Enable();

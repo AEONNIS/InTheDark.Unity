@@ -1,5 +1,5 @@
 ﻿using InTheDark.Model;
-using InTheDark.Model.Components.Events;
+using InTheDark.Model.Components;
 using Leopotam.Ecs.Types;
 using UnityEngine;
 

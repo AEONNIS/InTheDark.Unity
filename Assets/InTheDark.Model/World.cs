@@ -1,4 +1,4 @@
-﻿using InTheDark.Model.Components.Events;
+﻿using InTheDark.Model.Components;
 using InTheDark.Model.Systems;
 using Leopotam.Ecs;
 
@@ -11,9 +11,9 @@ namespace InTheDark.Model
 
         public World()
         {
-            _systems = new EcsSystems(_ecsWorld)
-                .AddSystems()
-                .AddOneFrameComponents();
+            _systems = new EcsSystems(_ecsWorld);
+            AddAllSystems();
+            RegistersAllOneFrameComponents();
         }
 
         public void Send<T>(in T eventComponent) where T : struct
@@ -25,9 +25,9 @@ namespace InTheDark.Model
 
         public void Inject<T>(T instance) => _systems.Inject(instance);
 
-        public void Init() => _systems?.Init();
+        public void Init() => _systems.Init();
 
-        public void Update() => _systems?.Run();
+        public void Update() => _systems.Run();
 
         public void Destroy()
         {
@@ -39,17 +39,18 @@ namespace InTheDark.Model
                 _ecsWorld = null;
             }
         }
-    }
 
-    // Частный случай расширения, никакой универсальности. Надо переделать или убрать.
-    public static class WorldExtension
-    {
-        public static EcsSystems AddSystems(this EcsSystems systems) => systems
+        private EcsSystems AddAllSystems() => _systems
+            .Add(new InputProcessingSystem())
+            .Add(new PlayerMovementSystem())
             .Add(new MapGenerationSystem())
             .Add(new MapPresentationSystem());
 
-        public static EcsSystems AddOneFrameComponents(this EcsSystems systems) => systems
-            .OneFrame<ToCreateMapPartEvent>()
-            .OneFrame<ToPresentEvent>();
+        private EcsSystems RegistersAllOneFrameComponents() => _systems
+            .OneFrame<PlayerMoveInputEvent>()
+            .OneFrame<MovementEvent>()
+            .OneFrame<MovementPresentationEvent>()
+            .OneFrame<MapPartCreationEvent>()
+            .OneFrame<PresentationEvent>();
     }
 }
