@@ -1,4 +1,5 @@
-﻿using InTheDark.UnityIntegration.Input;
+﻿using InTheDark.Model;
+using InTheDark.UnityIntegration.Input;
 using InTheDark.UnityIntegration.Presentation;
 using UnityEngine;
 
@@ -9,20 +10,19 @@ namespace InTheDark.UnityIntegration
         [SerializeField] private MapPresenter _mapPresenter;
         [SerializeField] private InputController _inputController;
 
-        private World _world = null;
+        private readonly World _world = new World();
 
         #region Unity
         private void Awake()
         {
-            _world = new World();
-            _inputController.Init(_world);
-        }
-
-        private void Start()
-        {
+            _inputController = new InputController(_world);
             _world.Inject(_mapPresenter);
             _world.Init();
         }
+
+        private void OnEnable() => _inputController.Enable();
+
+        private void OnDisable() => _inputController.Disable();
 
         private void Update() => _world.Update();
         #endregion
