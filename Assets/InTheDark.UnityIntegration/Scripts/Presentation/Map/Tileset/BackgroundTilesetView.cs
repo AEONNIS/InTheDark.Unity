@@ -3,21 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace InTheDark.UnityIntegration.Presentation
+namespace InTheDark.UnityIntegration.Presentation.Map
 {
-    [CreateAssetMenu(fileName = "BackgroundTilesetView", menuName = "InTheDark/Presentation/BackgroundTilesetView")]
-    public class BackgroundTilesetView : TilesetView<BackgroundTileId>
+    [CreateAssetMenu(fileName = "BackgroundTilesetView", menuName = "InTheDark/Presentation/Map/BackgroundTilesetView")]
+    public class BackgroundTilesetView : ScriptableObject
     {
-        [SerializeField] private List<BackgroundTileView> _tilesetView;
+        [SerializeField] private List<BackgroundTileView> _tilsetView;
 
-        public TileBase GetViewFor(BackgroundTileId id) => _tilesetView.Find(tileView => tileView.Id == id).View;
-    }
-
-    public abstract class TilesetView<U, T> : ScriptableObject where U : TileView<T>
-                                                               where T : struct
-    {
-        [SerializeField] private protected List<TileView<T>> _tilesetView;
-
-        public TileBase GetViewFor(T id) => _tilesetView.Find(tileView => tileView.Id == id).View;
+        public TileBase GetViewFor(BackgroundTileId id) => _tilsetView.Find(tileView => tileView.Id == id).View;
     }
 }

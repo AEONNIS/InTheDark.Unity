@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace InTheDark.UnityIntegration.Presentation
+namespace InTheDark.UnityIntegration.Presentation.Map
 {
-    [CreateAssetMenu(fileName = "ForegroundTilesetView", menuName = "InTheDark/Presentation/ForegroundTilesetView")]
+    [CreateAssetMenu(fileName = "ForegroundTilesetView", menuName = "InTheDark/Presentation/Map/ForegroundTilesetView")]
     public class ForegroundTilesetView : ScriptableObject
     {
         [SerializeField] private List<ForegroundTileView> _tilesetView;

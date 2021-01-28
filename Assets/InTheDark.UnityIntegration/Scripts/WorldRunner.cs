@@ -1,6 +1,6 @@
 ﻿using InTheDark.Model;
 using InTheDark.UnityIntegration.Input;
-using InTheDark.UnityIntegration.Presentation;
+using InTheDark.UnityIntegration.Presentation.Map;
 using UnityEngine;
 
 namespace InTheDark.UnityIntegration

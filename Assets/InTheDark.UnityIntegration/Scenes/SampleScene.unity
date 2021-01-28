@@ -225,8 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9121cfc78e62af145ace569786376a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bgPresenter: {fileID: 573533898}
-  _fgPresenter: {fileID: 535851775}
+  _backgroundPresenter: {fileID: 573533898}
+  _foregroundPresenter: {fileID: 535851775}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tilemap: {fileID: 535851774}
-  _fgTilesetView: {fileID: 11400000, guid: cff2e856e5f868e488b997893ab2568d, type: 2}
+  _tilesetView: {fileID: 11400000, guid: 7dc8b1ecdec35124d9e609c4bf1eb293, type: 2}
 --- !u!1 &573533894
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,4 +575,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tilemap: {fileID: 573533897}
-  _bgTilesetView: {fileID: 11400000, guid: e7dbfb1539dc6e4449b1c7cf0f044d67, type: 2}
+  _tilesetView: {fileID: 11400000, guid: 93bb66d025809624aa801b163db50515, type: 2}
