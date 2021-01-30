@@ -41,16 +41,18 @@ namespace InTheDark.Model
         }
 
         private EcsSystems AddAllSystems() => _systems
+            .Add(new MapGenerationSystem())
+            .Add(new PlayerInitSystem())
             .Add(new InputProcessingSystem())
             .Add(new PlayerMovementSystem())
-            .Add(new MapGenerationSystem())
-            .Add(new MapPresentationSystem());
+            .Add(new MapPresentationSystem())
+            .Add(new PlayerMovementPresentationSystem());
 
         private EcsSystems RegistersAllOneFrameComponents() => _systems
+            .OneFrame<MapPartCreationEvent>()
             .OneFrame<PlayerMoveInputEvent>()
             .OneFrame<MovementEvent>()
-            .OneFrame<MovementPresentationEvent>()
-            .OneFrame<MapPartCreationEvent>()
-            .OneFrame<PresentationEvent>();
+            .OneFrame<PresentationEvent>()
+            .OneFrame<MovementPresentationEvent>();
     }
 }
