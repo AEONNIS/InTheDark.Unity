@@ -8,7 +8,7 @@ namespace InTheDark.Model.Systems
     public class PlayerInitSystem : IEcsInitSystem
     {
         private readonly EcsWorld _world = null;
-        private readonly IInitPlayerPresenter _initPlayerPresenter;
+        private readonly IPlayerPresenter _playerPresenter = null;
 
         //To Config...
         private readonly Int2 _initPlayerPosition = new Int2(15, 15);
@@ -18,8 +18,7 @@ namespace InTheDark.Model.Systems
             var entity = _world.NewEntity();
             ref var player = ref entity.Get<PlayerComponent>();
             player = new PlayerComponent { Position = _initPlayerPosition };
-
-            _initPlayerPresenter.Init(player);
+            _playerPresenter.Present(player);
         }
     }
 }

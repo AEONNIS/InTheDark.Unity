@@ -10,7 +10,7 @@ namespace InTheDark.Model.Systems
         private readonly EcsWorld _world = null;
         private readonly EcsFilter<MapPartCreationEvent> _mapPartCreationFilter = null;
 
-        // Вынести в конфиг, когда разберусь, как его правильно реализовать.
+        // To Config...
         private readonly Int2 _mapPartSize = new Int2(32, 32);
         private readonly Int2 _initOffsetOnMap = new Int2(0, 0);
 
