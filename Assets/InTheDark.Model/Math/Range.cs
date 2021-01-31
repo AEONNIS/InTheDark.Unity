@@ -1,6 +1,6 @@
-﻿namespace InTheDark.Model.Map
+﻿namespace InTheDark.Model.Math
 {
-    public class Range<T> where T : unmanaged
+    public readonly struct Range<T> where T : unmanaged
     {
         public Range(T min, T max)
         {

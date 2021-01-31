@@ -4,49 +4,34 @@ namespace InTheDark.Model.Map
 {
     internal class Room
     {
-        internal HalfWall South { get; set; }
-        internal HalfWall East { get; set; }
-        internal HalfWall North { get; set; }
-        internal HalfWall West { get; set; }
-
-        internal (Room West, Room East) VerticalPartition(float position)
+        internal Room(in Int2 northWest, in Int2 southEast)
         {
-
-        }
-    }
-
-    internal class RoomBuilder
-    {
-        private HalfWall _south;
-        private HalfWall _east;
-        private HalfWall north;
-        private HalfWall _west;
-
-        internal Room Build(in Int2 northWest, in Int2 southEast)
-        {
-            var angles = BuildAngles(northWest, southEast);
-
-
+            var angles = new Angles(northWest, southEast);
+            North = new Wall(angles.NorthWest, angles.NorthEast, this);
+            East = new Wall(angles.NorthEast, angles.SouthEast, this);
+            South = new Wall(angles.SouthEast, angles.SouthWest, this);
+            West = new Wall(angles.SouthWest, angles.NorthWest, this);
         }
 
-        private Angles BuildAngles(in Int2 northWest, in Int2 southEast)
-            => new Angles
-            (new Int2(northWest.X, southEast.Y),
-             southEast,
-             new Int2(southEast.X, northWest.Y),
-             northWest);
+        internal Wall North { get; private set; }
+        internal Wall East { get; private set; }
+        internal Wall South { get; private set; }
+        internal Wall West { get; private set; }
 
-        private Walls BuildWalls(Angles angles)
+        private readonly struct Angles
         {
-            var walls = new Walls
+            internal Angles(in Int2 northWest, in Int2 southEast)
             {
-                South = new HalfWall { Origin = angles.SouthWest },
-                East = new HalfWall { Origin = angles.SouthEast },
-                North = new HalfWall { Origin = angles.NorthEast },
-                West = new HalfWall { Origin = angles.NorthWest },
-            };
+                NorthWest = northWest;
+                NorthEast = new Int2(southEast.X, northWest.Y);
+                SouthEast = southEast;
+                SouthWest = new Int2(northWest.X, southEast.Y);
+            }
 
-            walls.South.Prev = walls.
+            internal Int2 NorthWest { get; }
+            internal Int2 NorthEast { get; }
+            internal Int2 SouthEast { get; }
+            internal Int2 SouthWest { get; }
         }
     }
 }
