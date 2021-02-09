@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InTheDark.Model.Math
+namespace InTheDark.Model.Maths
 {
     public readonly struct RangeInt
     {
@@ -11,6 +11,6 @@ namespace InTheDark.Model.Math
         public int Min => _range.Min;
         public int Max => _range.Max;
 
-        public int Split(float position) => Min + (int)System.Math.Round((Max - Min) * position, MidpointRounding.AwayFromZero);
+        public int Split(float position) => Min + (int)Math.Round((Max - Min) * position, MidpointRounding.AwayFromZero);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace InTheDark.Model.Math
+﻿namespace InTheDark.Model.Maths
 {
     public readonly struct RangeFloat
     {

@@ -7,16 +7,44 @@ namespace InTheDark.Model.Map
         internal Room(in Int2 northWest, in Int2 southEast)
         {
             var angles = new Angles(northWest, southEast);
-            North = new Wall(angles.NorthWest, angles.NorthEast, this);
-            East = new Wall(angles.NorthEast, angles.SouthEast, this);
-            South = new Wall(angles.SouthEast, angles.SouthWest, this);
-            West = new Wall(angles.SouthWest, angles.NorthWest, this);
+            North = new HalfWallSegment(angles.NorthWest, angles.NorthEast);
+            East = new HalfWallSegment(angles.NorthEast, angles.SouthEast);
+            South = new HalfWallSegment(angles.SouthEast, angles.SouthWest);
+            West = new HalfWallSegment(angles.SouthWest, angles.NorthWest);
+            SetRoom();
         }
 
-        internal Wall North { get; private set; }
-        internal Wall East { get; private set; }
-        internal Wall South { get; private set; }
-        internal Wall West { get; private set; }
+        internal HalfWallSegment North { get; private set; }
+        internal HalfWallSegment East { get; private set; }
+        internal HalfWallSegment South { get; private set; }
+        internal HalfWallSegment West { get; private set; }
+        internal int Area => North.Length * East.Length;
+
+        internal Room WestEastPartition(float position)
+        {
+            var westRoom = new Room(North.Start, South.GetPointIn(1 - position));
+            var eastRoom = new Room(North.GetPointIn(position), South.Start);
+            westRoom.East.SetTwin(eastRoom.West);
+
+            return new AdjacentWestEastRooms(westRoom, eastRoom);
+        }
+
+        internal AdjacentNorthSouthRooms NorthSouthPartition(float position)
+        {
+            var northRoom = new Room(North.Start, East.GetPointIn(position));
+            var southRoom = new Room(West.GetPointIn(1 - position), South.Start);
+            northRoom.South.SetTwin(southRoom.North);
+
+            return new AdjacentNorthSouthRooms(northRoom, southRoom);
+        }
+
+        private void SetRoom()
+        {
+            North.SetRoom(this);
+            East.SetRoom(this);
+            South.SetRoom(this);
+            West.SetRoom(this);
+        }
 
         private readonly struct Angles
         {
