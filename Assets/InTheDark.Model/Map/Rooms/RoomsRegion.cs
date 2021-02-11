@@ -1,23 +1,70 @@
 ﻿using Leopotam.Ecs.Types;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace InTheDark.Model.Map
 {
-    internal class RoomsRegion
+    internal partial class RoomsRegion
     {
+        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
+        private static readonly int _mapGuideLength = Enum.GetValues(typeof(MapGuide)).Length;
+
         private readonly List<Room> _rooms;
 
         internal RoomsRegion(List<Room> rooms) => _rooms = rooms;
 
         internal ReadOnlyCollection<Room> Rooms => _rooms.AsReadOnly();
 
-        internal static RoomsRegion CreateRandom(in Int2 size, int partitions, in Int2 offset)
+        // Pass configuration in one parameter
+        internal static RoomsRegion CreateRandom(in Int2 size, in Int2 offset, int _splitsNumber, float limitingWallSplitting)
         {
-            var rooms = new List<Room>(partitions + 1);
-            var room = new Room(new Int2() + offset, size + offset - new Int2(1, 1));
+            var roomsRegion = new RoomsRegion(new List<Room>(_splitsNumber + 1));
+            roomsRegion._rooms.Add(new Room(offset, offset + size - new Int2(1, 1)));
 
+            for (int i = 0; i < _splitsNumber; i++)
+                roomsRegion.RandomSplit(limitingWallSplitting);
 
+            return roomsRegion;
+        }
+
+        private static MapGuide GetSplitDirection(Room room)
+        {
+            if (room.South.Length > room.East.Length)
+                return MapGuide.WestEast;
+            else if (room.South.Length < room.East.Length)
+                return MapGuide.SouthNorth;
+            else
+                return (MapGuide)_random.Next(0, _mapGuideLength);
+        }
+
+        private static float GetRandomSplitPosition(float limitingWallSplitting)
+            => (float)(_random.NextDouble() * (1 - limitingWallSplitting) + limitingWallSplitting);
+
+        private void RandomSplit(float limitingWallSplitting)
+        {
+            var i = GetLargestRoomIndex();
+            var room = _rooms[i];
+            var splitDirection = GetSplitDirection(room);
+            (Room FirstRoom, Room SecondRoom) = splitDirection == MapGuide.SouthNorth
+                ? room.SplitIntoSouthNorthAt(GetRandomSplitPosition(limitingWallSplitting))
+                : room.SplitIntoWestEastAt(GetRandomSplitPosition(limitingWallSplitting));
+            _rooms[i] = FirstRoom;
+            _rooms.Insert(i + 1, SecondRoom);
+        }
+
+        private int GetLargestRoomIndex()
+        {
+            int result = 0;
+            int area = _rooms[result].Area;
+
+            for (int i = 1; i < _rooms.Count; i++)
+            {
+                if (_rooms[i].Area > area)
+                    result = i;
+            }
+
+            return result;
         }
     }
 }

@@ -4,62 +4,58 @@ namespace InTheDark.Model.Map
 {
     internal class Room
     {
-        internal Room(in Int2 northWest, in Int2 southEast)
+        internal Room(in Int2 southWest, in Int2 northEast)
         {
-            var angles = new Angles(northWest, southEast);
-            North = new HalfWallSegment(angles.NorthWest, angles.NorthEast);
-            East = new HalfWallSegment(angles.NorthEast, angles.SouthEast);
-            South = new HalfWallSegment(angles.SouthEast, angles.SouthWest);
-            West = new HalfWallSegment(angles.SouthWest, angles.NorthWest);
-            SetRoom();
+            var angles = new Angles(southWest, northEast);
+            South = new HalfWall(angles.SouthWest, angles.SouthEast, this);
+            East = new HalfWall(angles.SouthEast, angles.NorthEast, this);
+            North = new HalfWall(angles.NorthEast, angles.NorthWest, this);
+            West = new HalfWall(angles.NorthWest, angles.SouthWest, this);
         }
 
-        internal HalfWallSegment North { get; private set; }
-        internal HalfWallSegment East { get; private set; }
-        internal HalfWallSegment South { get; private set; }
-        internal HalfWallSegment West { get; private set; }
-        internal int Area => North.Length * East.Length;
+        internal HalfWall South { get; }
+        internal HalfWall East { get; }
+        internal HalfWall North { get; }
+        internal HalfWall West { get; }
 
-        internal Room WestEastPartition(float position)
+        internal int Area => South.Length * East.Length;
+
+        internal (Room WestRoom, Room EastRoom) SplitIntoWestEastAt(float position)
         {
-            var westRoom = new Room(North.Start, South.GetPointIn(1 - position));
-            var eastRoom = new Room(North.GetPointIn(position), South.Start);
-            westRoom.East.SetTwin(eastRoom.West);
+            var southPoint = South.GetPointIn(position);
+            var northPoint = North.GetPointIn(1 - position);
+            var westRoom = new Room(South.Start, northPoint);
+            var eastRoom = new Room(southPoint, North.Start);
+            westRoom.East.Segments[0].Twin = eastRoom.West.Segments[0];
 
-            return new AdjacentWestEastRooms(westRoom, eastRoom);
+            return (westRoom, eastRoom);
         }
 
-        internal AdjacentNorthSouthRooms NorthSouthPartition(float position)
+        internal (Room SouthRoom, Room NorthRoom) SplitIntoSouthNorthAt(float position)
         {
-            var northRoom = new Room(North.Start, East.GetPointIn(position));
-            var southRoom = new Room(West.GetPointIn(1 - position), South.Start);
-            northRoom.South.SetTwin(southRoom.North);
+            var eastPoint = East.GetPointIn(position);
+            var westPoint = West.GetPointIn(1 - position);
+            var southRoom = new Room(South.Start, eastPoint);
+            var northRoom = new Room(westPoint, North.Start);
+            southRoom.North.Segments[0].Twin = northRoom.South.Segments[0];
 
-            return new AdjacentNorthSouthRooms(northRoom, southRoom);
-        }
-
-        private void SetRoom()
-        {
-            North.SetRoom(this);
-            East.SetRoom(this);
-            South.SetRoom(this);
-            West.SetRoom(this);
+            return (southRoom, northRoom);
         }
 
         private readonly struct Angles
         {
-            internal Angles(in Int2 northWest, in Int2 southEast)
+            internal Angles(in Int2 southWest, in Int2 northEast)
             {
-                NorthWest = northWest;
-                NorthEast = new Int2(southEast.X, northWest.Y);
-                SouthEast = southEast;
-                SouthWest = new Int2(northWest.X, southEast.Y);
+                SouthWest = southWest;
+                SouthEast = new Int2(northEast.X, southWest.Y);
+                NorthEast = northEast;
+                NorthWest = new Int2(southWest.X, northEast.Y);
             }
 
-            internal Int2 NorthWest { get; }
-            internal Int2 NorthEast { get; }
-            internal Int2 SouthEast { get; }
             internal Int2 SouthWest { get; }
+            internal Int2 SouthEast { get; }
+            internal Int2 NorthEast { get; }
+            internal Int2 NorthWest { get; }
         }
     }
 }

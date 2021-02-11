@@ -1,45 +1,48 @@
-﻿using InTheDark.Model.Maths;
-using Leopotam.Ecs.Types;
+﻿using Leopotam.Ecs.Types;
 using System;
 
 namespace InTheDark.Model.Map
 {
     internal class HalfWallSegment
     {
-        internal HalfWallSegment(Int2 start, Int2 end)
+        private HalfWallSegment _twin = null;
+
+        // Есть возможность создать не только вертикальный/горизонтальный сегмент.
+        internal HalfWallSegment(in Int2 start, in Int2 end, HalfWall parent)
         {
             Start = start;
             End = end;
+            Parent = parent;
         }
 
         internal Int2 Start { get; }
-        internal Int2 End { get; private set; }
-        internal HalfWallSegment Twin { get; private set; }
-        internal Room Room { get; private set; }
+        internal Int2 End { get; }
+        internal HalfWall Parent { get; }
+        internal HalfWallSegment Twin
+        {
+            get => _twin;
+            set
+            {
+                _twin = value;
+                value._twin = this;
+            }
+        }
 
         internal bool IsHorizontal => Start.Y == End.Y;
-        internal int Length => IsHorizontal ? Start.X - End.X : Start.Y - End.Y;
-        internal int LengthAbs => Math.Abs(Length);
+        internal int Length => Math.Abs(LengthNotAbsolute);
+        private int LengthNotAbsolute => IsHorizontal ? Start.X - End.X : Start.Y - End.Y;
 
-        internal void SetTwin(HalfWallSegment twin)
+        internal bool Contains(in Int2 point) => IsHorizontal
+            ? Start.X <= point.X && point.X <= End.X
+            : Start.Y <= point.Y && point.Y <= End.Y;
+
+        // М.б. передана точка, не принадлежащая сегменту.
+        internal (HalfWallSegment FirstSegment, HalfWallSegment SecondSegment) SplitAt(in Int2 point)
         {
-            Twin = twin;
-            twin.SetTwin(this);
+            var firstSegment = new HalfWallSegment(Start, point, Parent);
+            var secondSegment = new HalfWallSegment(point, End, Parent);
+
+            return (firstSegment, secondSegment);
         }
-
-        internal void SetRoom(Room room) => Room = room;
-
-        internal HalfWallSegment ToPartition(float position)
-        {
-            var point = GetPointIn(position);
-            var segment = new HalfWallSegment(point, End);
-            End = point;
-
-            return segment;
-        }
-
-        private Int2 GetPointIn(float position) => IsHorizontal
-                ? new Int2(new RangeInt(Start.X, End.X).Split(position), Start.Y)
-                : new Int2(Start.X, new RangeInt(Start.Y, End.Y).Split(position));
     }
 }

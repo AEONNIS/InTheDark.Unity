@@ -8,15 +8,18 @@ namespace InTheDark.Model.Systems
     public class MapGenerationSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly EcsWorld _world = null;
+        // Rename Part to Region
         private readonly EcsFilter<MapPartCreationEvent> _mapPartCreationFilter = null;
 
         // To Config...
-        private readonly Int2 _mapPartSize = new Int2(32, 32);
         private readonly Int2 _initOffsetOnMap = new Int2(0, 0);
+        private readonly Int2 _mapRegionSize = new Int2(32, 32);
+        private readonly int _splitsNumber = 15;
+        private readonly float _limitingWallSplitting = 0.2f;
 
         public void Init()
         {
-            var initMapPartCreation = new MapPartCreationEvent { Size = _mapPartSize, OffsetOnMap = _initOffsetOnMap };
+            var initMapPartCreation = new MapPartCreationEvent { Size = _mapRegionSize, OffsetOnMap = _initOffsetOnMap };
             CreateInitialMapPart(initMapPartCreation);
         }
 
