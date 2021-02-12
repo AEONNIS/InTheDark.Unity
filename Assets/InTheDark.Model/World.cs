@@ -49,7 +49,7 @@ namespace InTheDark.Model
             .Add(new PlayerMovementPresentationSystem());
 
         private EcsSystems RegistersAllOneFrameComponents() => _systems
-            .OneFrame<MapPartCreationEvent>()
+            .OneFrame<MapRegionCreationEvent>()
             .OneFrame<PlayerMoveInputEvent>()
             .OneFrame<MovementEvent>()
             .OneFrame<PresentationEvent>()

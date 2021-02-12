@@ -1,4 +1,5 @@
-﻿using InTheDark.Model.Maths;
+﻿using InTheDark.Model.Components;
+using InTheDark.Model.Maths;
 using Leopotam.Ecs.Types;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace InTheDark.Model.Map
         internal int Length => Math.Abs(LengthNotAbsolute);
         private int LengthNotAbsolute => IsHorizontal ? Start.X - End.X : Start.Y - End.Y;
 
+        // You need to use when splitting
         internal void SplitIntoSegmentsAt(float position)
         {
             var point = GetPointIn(position);
@@ -38,6 +40,24 @@ namespace InTheDark.Model.Map
         internal Int2 GetPointIn(float position) => IsHorizontal
             ? new Int2(new RangeInt(Start.X, End.X).Split(position), Start.Y)
             : new Int2(Start.X, new RangeInt(Start.Y, End.Y).Split(position));
+
+        internal List<ForegroundTileComponent> GetTiles()
+        {
+            var result = new List<ForegroundTileComponent>();
+
+            if (IsHorizontal)
+            {
+                for (int x = Start.X; x <= End.X; x++)
+                    result.Add(new ForegroundTileComponent { Position = new Int2(x, Start.Y), Id = ForegroundTileId.Wall });
+            }
+            else
+            {
+                for (int y = Start.Y; y <= End.Y; y++)
+                    result.Add(new ForegroundTileComponent { Position = new Int2(Start.X, y), Id = ForegroundTileId.Wall });
+            }
+
+            return result;
+        }
 
         private int GetSegmentIndexIn(Int2 point) => _segments.FindIndex(segment => segment.Contains(point));
     }

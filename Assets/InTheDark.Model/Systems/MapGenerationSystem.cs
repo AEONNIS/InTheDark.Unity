@@ -8,8 +8,7 @@ namespace InTheDark.Model.Systems
     public class MapGenerationSystem : IEcsInitSystem, IEcsRunSystem
     {
         private readonly EcsWorld _world = null;
-        // Rename Part to Region
-        private readonly EcsFilter<MapPartCreationEvent> _mapPartCreationFilter = null;
+        private readonly EcsFilter<MapRegionCreationEvent> _mapRegionCreationFilter = null;
 
         // To Config...
         private readonly Int2 _initOffsetOnMap = new Int2(0, 0);
@@ -19,35 +18,35 @@ namespace InTheDark.Model.Systems
 
         public void Init()
         {
-            var initMapPartCreation = new MapPartCreationEvent { Size = _mapRegionSize, OffsetOnMap = _initOffsetOnMap };
-            CreateInitialMapPart(initMapPartCreation);
+            var initMapRegionCreation = new MapRegionCreationEvent { Size = _mapRegionSize, OffsetOnMap = _initOffsetOnMap };
+            CreateInitialMapRegion(initMapRegionCreation);
         }
 
         public void Run()
         {
-            foreach (int i in _mapPartCreationFilter)
+            foreach (int i in _mapRegionCreationFilter)
             {
-                ref var entity = ref _mapPartCreationFilter.GetEntity(i);
-                ref var mapPartCreation = ref _mapPartCreationFilter.Get1(i);
-                CreateFloor(mapPartCreation);
-                CreateExternalWalls(mapPartCreation);
+                ref var entity = ref _mapRegionCreationFilter.GetEntity(i);
+                ref var mapRegionCreation = ref _mapRegionCreationFilter.Get1(i);
+                CreateFloor(mapRegionCreation);
+                CreateExternalWalls(mapRegionCreation);
             }
         }
 
-        public void CreateInitialMapPart(in MapPartCreationEvent initMapPartCreation)
+        public void CreateInitialMapRegion(in MapRegionCreationEvent initMapRegionCreation)
         {
             var entity = _world.NewEntity();
-            ref var mapPartCreation = ref entity.Get<MapPartCreationEvent>();
-            mapPartCreation = initMapPartCreation;
+            ref var mapRegionCreation = ref entity.Get<MapRegionCreationEvent>();
+            mapRegionCreation = initMapRegionCreation;
         }
 
-        private void CreateFloor(in MapPartCreationEvent mapPartCreation)
+        private void CreateFloor(in MapRegionCreationEvent mapRegionCreation)
         {
-            for (int x = 0; x < mapPartCreation.Size.X; x++)
+            for (int x = 0; x < mapRegionCreation.Size.X; x++)
             {
-                for (int y = 0; y < mapPartCreation.Size.Y; y++)
+                for (int y = 0; y < mapRegionCreation.Size.Y; y++)
                 {
-                    var position = new Int2(x, y) + mapPartCreation.OffsetOnMap;
+                    var position = new Int2(x, y) + mapRegionCreation.OffsetOnMap;
                     CreateFloorTile(position);
                 }
             }
@@ -61,29 +60,29 @@ namespace InTheDark.Model.Systems
             entity.Get<PresentationEvent>();
         }
 
-        private void CreateExternalWalls(in MapPartCreationEvent mapPartCreation)
+        private void CreateExternalWalls(in MapRegionCreationEvent mapRegionCreation)
         {
-            CreateSouthAndNorthWalls(mapPartCreation);
-            CreateWestAndEastWalls(mapPartCreation);
+            CreateSouthAndNorthWalls(mapRegionCreation);
+            CreateWestAndEastWalls(mapRegionCreation);
         }
 
-        private void CreateSouthAndNorthWalls(in MapPartCreationEvent mapPartCreation)
+        private void CreateSouthAndNorthWalls(in MapRegionCreationEvent mapRegionCreation)
         {
-            for (int x = 0; x < mapPartCreation.Size.X; x++)
+            for (int x = 0; x < mapRegionCreation.Size.X; x++)
             {
-                var southPosition = new Int2(x, 0) + mapPartCreation.OffsetOnMap;
-                var northPosition = new Int2(x, mapPartCreation.Size.Y - 1) + mapPartCreation.OffsetOnMap;
+                var southPosition = new Int2(x, 0) + mapRegionCreation.OffsetOnMap;
+                var northPosition = new Int2(x, mapRegionCreation.Size.Y - 1) + mapRegionCreation.OffsetOnMap;
                 CreateWallTile(southPosition);
                 CreateWallTile(northPosition);
             }
         }
 
-        private void CreateWestAndEastWalls(in MapPartCreationEvent mapPartCreation)
+        private void CreateWestAndEastWalls(in MapRegionCreationEvent mapRegionCreation)
         {
-            for (int y = 1; y < mapPartCreation.Size.Y - 1; y++)
+            for (int y = 1; y < mapRegionCreation.Size.Y - 1; y++)
             {
-                var westPosition = new Int2(0, y) + mapPartCreation.OffsetOnMap;
-                var eastPosition = new Int2(mapPartCreation.Size.X - 1, y) + mapPartCreation.OffsetOnMap;
+                var westPosition = new Int2(0, y) + mapRegionCreation.OffsetOnMap;
+                var eastPosition = new Int2(mapRegionCreation.Size.X - 1, y) + mapRegionCreation.OffsetOnMap;
                 CreateWallTile(westPosition);
                 CreateWallTile(eastPosition);
             }

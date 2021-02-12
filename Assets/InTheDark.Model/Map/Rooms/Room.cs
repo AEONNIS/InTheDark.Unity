@@ -1,4 +1,6 @@
-﻿using Leopotam.Ecs.Types;
+﻿using InTheDark.Model.Components;
+using Leopotam.Ecs.Types;
+using System.Collections.Generic;
 
 namespace InTheDark.Model.Map
 {
@@ -40,6 +42,25 @@ namespace InTheDark.Model.Map
             southRoom.North.Segments[0].Twin = northRoom.South.Segments[0];
 
             return (southRoom, northRoom);
+        }
+
+        internal List<ForegroundTileComponent> GetTiles()
+        {
+            // Convenient mechanism for moving to the next wall.
+            var result = South.GetTiles();
+            result.RemoveAt(0);
+            var eastTiles = East.GetTiles();
+            eastTiles.RemoveAt(0);
+            var northTiles = North.GetTiles();
+            northTiles.RemoveAt(0);
+            var westTiles = West.GetTiles();
+            westTiles.RemoveAt(0);
+
+            result.AddRange(eastTiles);
+            result.AddRange(northTiles);
+            result.AddRange(westTiles);
+
+            return result;
         }
 
         private readonly struct Angles

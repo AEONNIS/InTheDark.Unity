@@ -3,11 +3,12 @@ using System;
 
 namespace InTheDark.Model.Map
 {
+    // _? It is possible to make inheritance for the horizontal and vertical segment. 
     internal class HalfWallSegment
     {
         private HalfWallSegment _twin = null;
 
-        // Есть возможность создать не только вертикальный/горизонтальный сегмент.
+        // _* Есть возможность создать не только вертикальный/горизонтальный сегмент.
         internal HalfWallSegment(in Int2 start, in Int2 end, HalfWall parent)
         {
             Start = start;

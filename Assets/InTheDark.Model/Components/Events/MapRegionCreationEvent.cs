@@ -2,7 +2,7 @@
 
 namespace InTheDark.Model.Components
 {
-    public struct MapPartCreationEvent
+    public struct MapRegionCreationEvent
     {
         public Int2 Size;
         public Int2 OffsetOnMap;

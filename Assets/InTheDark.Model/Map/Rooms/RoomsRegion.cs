@@ -1,25 +1,31 @@
-﻿using Leopotam.Ecs.Types;
+﻿using InTheDark.Model.Components;
+using Leopotam.Ecs.Types;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace InTheDark.Model.Map
 {
-    internal partial class RoomsRegion
+    internal class RoomsRegion
     {
         private static readonly Random _random = new Random(DateTime.Now.Millisecond);
         private static readonly int _mapGuideLength = Enum.GetValues(typeof(MapGuide)).Length;
 
         private readonly List<Room> _rooms;
+        private readonly Int2 _size;
 
-        internal RoomsRegion(List<Room> rooms) => _rooms = rooms;
+        internal RoomsRegion(List<Room> rooms, Int2 size)
+        {
+            _rooms = rooms;
+            _size = size;
+        }
 
         internal ReadOnlyCollection<Room> Rooms => _rooms.AsReadOnly();
 
         // Pass configuration in one parameter
         internal static RoomsRegion CreateRandom(in Int2 size, in Int2 offset, int _splitsNumber, float limitingWallSplitting)
         {
-            var roomsRegion = new RoomsRegion(new List<Room>(_splitsNumber + 1));
+            var roomsRegion = new RoomsRegion(new List<Room>(_splitsNumber + 1), size);
             roomsRegion._rooms.Add(new Room(offset, offset + size - new Int2(1, 1)));
 
             for (int i = 0; i < _splitsNumber; i++)
@@ -40,6 +46,11 @@ namespace InTheDark.Model.Map
 
         private static float GetRandomSplitPosition(float limitingWallSplitting)
             => (float)(_random.NextDouble() * (1 - limitingWallSplitting) + limitingWallSplitting);
+
+        internal List<ForegroundTileComponent> GetTiles()
+        {
+
+        }
 
         private void RandomSplit(float limitingWallSplitting)
         {
